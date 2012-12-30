@@ -1,10 +1,10 @@
+  
 import cv2
 from video import create_capture
 from common import clock, draw_str
 import pygame,sys,os
 from pygame.locals import *
 import msvcrt
-import sys
 
 video_src = -1
 cascade_fn = "haarcascade_frontalface_alty.xml"
