@@ -1,10 +1,17 @@
-  
+#import sys, os
 import cv2
 from video import create_capture
-from common import clock, draw_str
-import pygame,sys,os
-from pygame.locals import *
-import msvcrt
+#from common import clock, draw_str
+import pygame
+#from pygame.locals import *
+#import msvcrt
+
+Right_Reverse_Pin = 3;
+Right_Forward_Pin = 5;
+Left_Reverse_Pin = 6;
+Left_Forward_Pin = 9;
+Enable_Motors_Pin = 2;
+LED_Pin = 13;
 
 video_src = -1
 cascade_fn = "haarcascade_frontalface_alty.xml"
@@ -13,10 +20,10 @@ window_x = 1600
 window_y = 800
 eyeball_size = 700
 iris_size = 500
-pupil_size = 300
+base_pupil_size = 300
 sparkle_size = 70
   
-def draw_eye(horizontal_pos):
+def draw_eye(horizontal_pos, pupil_size):
   pygame.draw.circle(screen, (255,255,255), (horizontal_pos, window_y/2), eyeball_size, 0)
   pygame.draw.circle(screen, (0,255,0), (horizontal_pos, window_y/2), iris_size, 0)
   pygame.draw.circle(screen, (0,0,0), (horizontal_pos, window_y/2), pupil_size, 0)
@@ -25,7 +32,7 @@ def draw_eye(horizontal_pos):
 def eye_frame(horizontal_pos):
   black = (0,0,0)
   screen.fill(black) 
-  draw_eye(horizontal_pos)
+  draw_eye(horizontal_pos, base_pupil_size)
   pygame.display.flip()
 
 def cam2eye_mapper(horizontal_pos):
@@ -76,10 +83,16 @@ while True:
 
   for x, y, width, height in rects:
     eye_is_open = True
-    draw_eye(cam2eye_mapper(x))
+    new_pupil_size = width * 2
+    new_pupil_size = new_pupil_size + 50
+    if new_pupil_size > iris_size:
+      new_pupil_size = iris_size - 20
+    
+    draw_eye(cam2eye_mapper(x),new_pupil_size)
     #print "x=" + str(x) + " y=" + str(y) + " width=" + str(width) + " height=" + str(height)
 
   pygame.display.flip()
+  pygame.time.delay(20)
   
   
 ##  #go right
@@ -89,7 +102,6 @@ while True:
 ##  for i in range(right,left, -1):
 ##    eye_frame(i)
   
-
-sys.exit("get out of town")  
+#sys.exit("get out of town")  
 
 
